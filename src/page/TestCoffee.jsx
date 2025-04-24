@@ -9,7 +9,7 @@ const TestCoffee = () => {
 
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
-  const [images, setImages] = useState('');
+  const [image, setImages] = useState([]);
   const [coffeeShopId, setCoffeeShopId] = useState('');
   const navigate = useNavigate();
 
@@ -35,14 +35,13 @@ const TestCoffee = () => {
         } else if (Array.isArray(data.coffee)) {
           coffeeArray = data.coffee;
         } else if (Array.isArray(data.data)) {
-          coffeeArray = data.data; // <- Add this
+          coffeeArray = data.data;
         } else {
           throw new Error("Invalid coffee data format");
         }
 
         setCoffee(coffeeArray);
       })
-
       .catch((err) => {
         console.error('Error fetching coffees:', err);
         setError('Failed to load coffee data. Please try again later.');
@@ -52,13 +51,12 @@ const TestCoffee = () => {
       });
   }, []);
 
-
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
     setIsModalOpen(false);
     setName('');
     setPrice('');
-    setImages('');
+    setImages([]);
     setCoffeeShopId('');
     setError(null);
   };
@@ -75,9 +73,8 @@ const TestCoffee = () => {
       return false;
     }
 
-    const imageArray = images.split(',').map(img => img.trim()).filter(img => img);
-    if (imageArray.length === 0) {
-      setError('At least one image URL is required');
+    if (image.length === 0) {
+      setError('At least one image file is required');
       return false;
     }
 
@@ -88,6 +85,12 @@ const TestCoffee = () => {
 
     return true;
   };
+  const handleImageChange = (e) => {
+    // Only set the first file
+    if (e.target.files && e.target.files[0]) {
+      setImages(e.target.files[0]);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -95,36 +98,54 @@ const TestCoffee = () => {
 
     if (!validateForm()) return;
 
-    const newCoffee = {
-      name: name.trim(),
-      price: parseFloat(price),
-      images: images.split(',').map(img => img.trim()).filter(img => img),
-      coffeeShopId,
-    };
+    const formData = new FormData();
+    formData.append("name", name.trim());
+    formData.append("price", parseFloat(price));
+    formData.append("coffeeShopId", coffeeShopId);
+
+    // Append the single image file
+    formData.append("image", image);
+
+    // Log what we're sending for debugging
+    console.log("Sending data to server:");
+    console.log("Name:", name);
+    console.log("Price:", price);
+    console.log("CoffeeShopId:", coffeeShopId);
+    console.log("Image file:", image);
 
     setIsLoading(true);
     try {
-      const res = await fetch('http://localhost:3000/coffee', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newCoffee),
+      const res = await fetch("http://localhost:3000/coffee", {
+        method: "POST",
+        // Important: Do NOT set Content-Type header when sending FormData
+        body: formData,
       });
+
+      // Check if we got HTML instead of JSON (error page)
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("text/html")) {
+        console.error("Server returned HTML instead of JSON");
+        throw new Error("Server returned an error page instead of JSON");
+      }
 
       const data = await res.json();
 
       if (res.ok) {
-        setCoffee(prev => [...prev, data]);
+        // Add the new coffee to the list
+        const newCoffee = data.data || data;
+        setCoffee((prev) => [...prev, newCoffee]);
         closeModal();
       } else {
-        setError(data.error || 'Failed to add coffee');
+        setError(data.message || "Failed to add coffee");
       }
     } catch (err) {
-      console.error('Error adding coffee:', err);
-      setError('An error occurred while adding coffee. Please try again.');
+      console.error("Error adding coffee:", err);
+      setError("An error occurred while adding coffee. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-[#1C1814] p-6 text-white">
@@ -150,13 +171,14 @@ const TestCoffee = () => {
           <div key={coffeeItem._id} className="bg-[#2b251e] shadow-md rounded-2xl p-4">
             <h2 className="text-xl font-semibold text-[#C99E71]">{coffeeItem.name}</h2>
             <p className="text-gray-300">Price: ${parseFloat(coffeeItem.price).toFixed(2)}</p>
-            {coffeeItem.images && coffeeItem.images[0] && (
+            {coffeeItem.image && coffeeItem.image && (
               <img
-                src={coffeeItem.images[0]}
+                src={typeof coffeeItem.image === 'string' ? coffeeItem.image : URL.createObjectURL(coffeeItem.image)}
                 alt={coffeeItem.name}
                 className="mt-2 w-full h-40 object-cover rounded"
                 onError={(e) => {
                   e.target.onerror = null;
+                  e.target.src = 'https://placehold.co/600x400?text=No+Image';
                 }}
               />
             )}
@@ -201,7 +223,7 @@ const TestCoffee = () => {
                 <label htmlFor="price" className="block text-sm font-medium text-gray-300 mb-1">Price *</label>
                 <input
                   id="price"
-                  type="text"
+                  type="number"
                   step="0.01"
                   min="0"
                   placeholder="e.g. 4.99"
@@ -213,16 +235,21 @@ const TestCoffee = () => {
               </div>
 
               <div>
-                <label htmlFor="images" className="block text-sm font-medium text-gray-300 mb-1">Image URLs *</label>
+                <label htmlFor="image" className="block text-sm font-medium text-gray-300 mb-1">Images *</label>
                 <input
-                  id="images"
-                  type="text"
-                  placeholder="Comma-separated URLs"
-                  value={images}
-                  onChange={(e) => setImages(e.target.value)}
+                  id="image"
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageChange}
                   className="w-full p-2 border border-[#C99E71] rounded bg-[#1C1814] text-white"
                   required
                 />
+                {image.length > 0 && (
+                  <div className="mt-2 text-sm text-gray-300">
+                    {image.length} file(s) selected
+                  </div>
+                )}
               </div>
 
               <div>

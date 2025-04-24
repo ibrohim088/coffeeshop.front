@@ -49,7 +49,7 @@ const HomeNavigationButton = () => {
           <rect width="100" height="100" rx="70" ry="70" fill="#C99E71" />
 
           {/* <!-- White upward arrow --> */}
-          <path d="M25 60 L50 30 L75 60" stroke="#14110E" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+          <path d="M25 60 L50 30 L75 60" stroke="#14110E" stroke-width="8" stroke-linecap="round" strokeLinejoin="round" fill="none" />
         </svg>
         {/* <span>Back Home</span> */}
       </div>
@@ -143,12 +143,12 @@ const Section = () => {
 
 
       {/* section-3 || popular product */}
-      <section id="popular_prodact" className="w-full h-[710px] flex flex-col items-center mt-30">
+      <section id="product" className="w-full h-[710px] flex flex-col items-center mt-30">
         {/* small-cart-section */}
         <div className=" w-[1240px] h-[700px] ">
           <h1 className="text-[#C99E71] text-[18px] text-center pt-12">Popular Product</h1>
 
-          {/* cart */}
+          {/* add cart */}
           <div className="flex justify-around mt-14 uppercase righteous-regular">
             {/* cart 1 -- brazil coffee gred */}
             <div className="flex flex-col space-y-5 items-center justify-center w-[340px] h-[500px] text-center">
@@ -158,9 +158,9 @@ const Section = () => {
                 {/* add to cart */}
                 <Link className="flex justify-center items-center capitalize" to={'/add_cart'}>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6 2L3 6V20C3 20.5304 3.21071 21.0391 3.58579 21.4142C3.96086 21.7893 4.46957 22 5 22H19C19.5304 22 20.0391 21.7893 20.4142 21.4142C20.7893 21.0391 21 20.5304 21 20V6L18 2H6Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M3 6H21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M16 10C16 11.0609 15.5786 12.0783 14.8284 12.8284C14.0783 13.5786 13.0609 14 12 14C10.9391 14 9.92172 13.5786 9.17157 12.8284C8.42143 12.0783 8 11.0609 8 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M6 2L3 6V20C3 20.5304 3.21071 21.0391 3.58579 21.4142C3.96086 21.7893 4.46957 22 5 22H19C19.5304 22 20.0391 21.7893 20.4142 21.4142C20.7893 21.0391 21 20.5304 21 20V6L18 2H6Z" stroke="white" stroke-width="2" stroke-linecap="round" strokeLinejoin="round" />
+                    <path d="M3 6H21" stroke="white" stroke-width="2" stroke-linecap="round" strokeLinejoin="round" />
+                    <path d="M16 10C16 11.0609 15.5786 12.0783 14.8284 12.8284C14.0783 13.5786 13.0609 14 12 14C10.9391 14 9.92172 13.5786 9.17157 12.8284C8.42143 12.0783 8 11.0609 8 10" stroke="white" stroke-width="2" stroke-linecap="round" strokeLinejoin="round" />
                   </svg>
                   add to cart
                 </Link>
@@ -365,15 +365,15 @@ const Section = () => {
                 <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
                   {/* <!-- Левая кнопка --> */}
                   <circle cx="25" cy="25" r="20" fill="black" />
-                  <path d="M35 25H15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                  <path d="M22 32L15 25L22 18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M35 25H15" stroke="white" stroke-width="2" stroke-linecap="round" strokeLinejoin="round" />
+                  <path d="M22 32L15 25L22 18" stroke="white" stroke-width="2" stroke-linecap="round" strokeLinejoin="round" />
                 </svg>
                 {/* cursor right */}
                 <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
                   {/* <!-- Правая кнопка --> */}
                   <circle cx="25" cy="25" r="20" fill="#C49A6C" />
-                  <path d="M15 25H35" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                  <path d="M28 18L35 25L28 32" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M15 25H35" stroke="black" stroke-width="2" stroke-linecap="round" strokeLinejoin="round" />
+                  <path d="M28 18L35 25L28 32" stroke="black" stroke-width="2" stroke-linecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
             </div>
@@ -381,13 +381,13 @@ const Section = () => {
         </div>
       </section>
       {/* Reservation ---  Бронирование */}
-      <section id="reservation" className="w-full h-[640px] mt-2 pt-5 flex justify-center">
+      <section id="reservation" className="w-full h-[640px] mt-33 pt-5 flex justify-center">
         <div className=" w-[1040px] flex bg-gray-800 h-[600px]">
           <img className="" src={map} width='537' alt="" />
           {/* title */}
           <div className="w-[537px] h-[600px] bg-[#1C1814]">
             <ul className="text-center pt-27">
-              <h1 className="text-[18px] text-[#C99E71] ">
+              <h1 id="reservation" className="text-[18px] text-[#C99E71] ">
                 Reservation
               </h1>
               <p className="text-[42px]  righteous-regular">

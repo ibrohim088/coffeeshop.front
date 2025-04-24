@@ -14,8 +14,8 @@ const Footer = () => {
             <g filter="url(#filter0_d_1_294)">
               <circle cx="68" cy="46" r="24" fill="#C99E71" />
             </g>
-            <path d="M60.9999 46H74.9999" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M68 39L75 46L68 53" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M60.9999 46H74.9999" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M68 39L75 46L68 53" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </span>
         <p className='text-[9px] text-[#C99E71] relative right-17'>Cofee shop © 2025.</p>
