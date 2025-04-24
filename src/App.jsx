@@ -7,37 +7,43 @@ import Section from './components/Section'
 import Footer from './components/Footer'
 //!Page
 import SingUp from './page/SingUP'
-import Orders from './page/Orders'
-import Basket from './page/Basket'
 import Register from './page/Register'
-import Menu from './page/Menu'
+import Basket from './page/Basket'
+import TestCoffee from './page/TestCoffee'
+import View_Product from './page/View_Product'
+import Order from './page/Oreder'
 
 const App = () => {
   const location = useLocation();
 
   // const isBasketPage = location.pathname === '/Basket';
   const isBasketPage = location.pathname.toLowerCase() === "/basket";
-
+  const isSingUpPage = location.pathname.toLowerCase() === "/singup";
+  const isRegisterPage = location.pathname.toLowerCase() === "/register";
+  const isTestCoffeePage = location.pathname.toLowerCase() === "/test_coffee";
+  const isViewProductPage = location.pathname.toLowerCase() === "/view_product";
+  const isOrderPage = location.pathname.toLowerCase() === "/order";
 
   return (
     <>
-      <Header />
+      {!isBasketPage && !isSingUpPage && !isRegisterPage && !isViewProductPage && !isOrderPage && <Header />}
       {/* {!isBasketPage && <Navbar />} */}
-      {!isBasketPage && <Section />}
-      
+
+      {!isBasketPage && !isSingUpPage && !isRegisterPage && !isTestCoffeePage && !isViewProductPage && !isOrderPage && <Section />}
       <Routes>
-        {/* <Route path='/' element={<Home />} /> */}
-        <Route path='/register' element={<Register/>} />
+        <Route path='/register' element={<Register />} />
         <Route path='/Basket' element={<Basket />} />
         <Route path='/singup' element={<SingUp />} />
-        <Route path='/orders' element={<Orders />} />
-        <Route path='/menu' element={<Menu/>}/>
+        <Route path='/test_coffee' element={<TestCoffee />} />
+        <Route path='/view_Product' element={<View_Product />} />
+        <Route path='/order' element={<Order />} />
       </Routes>
 
-      {!isBasketPage && <Footer />}
+      {!isBasketPage && !isSingUpPage && !isRegisterPage && !isTestCoffeePage && !isViewProductPage && !isOrderPage && <Footer />}
       {/* <Footer/> */}
     </>
   )
 }
 
 export default App
+

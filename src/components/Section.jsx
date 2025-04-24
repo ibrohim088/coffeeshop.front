@@ -1,4 +1,5 @@
 import React from "react";
+import { useState, useEffect } from "react";
 // import { useEffect } from "react";
 // img
 import coffeeImg from "../assets/coffe1.png"; // Импортируем картинку
@@ -12,33 +13,55 @@ import star1 from "../assets/star1.png";
 import men from "../assets/men.png";
 import women from "../assets/women.png";
 import map from "../assets/map.png";
+import americano from "../assets/americano.png";
+import espresso from "../assets/espresso.png";
+import cappuccino from "../assets/cappuccino.png";
+import macchiato from "../assets/Macchiato.png";
+import Flat_White from "../assets/Flat_White.png";
 // other
 import { Link } from "react-router-dom";
-// import L from "leaflet";
-// import "leaflet/dist/leaflet.css";
+const HomeNavigationButton = () => {
+  const [visible, setVisible] = useState(false);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      // Показываем кнопку после прокрутки на 400px
+      setVisible(scrollY > 400);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const goToHome = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
+  return (
+    <div className={`fixed left-0 bottom-0 w-full transition-transform duration-300 ${visible ? 'translate-y-0' : 'translate-y-full'}`}>
+      <div className="flex justify-end pb-17 pr-5">
+        <svg onClick={goToHome} xmlns="http://www.w3.org/2000/svg" viewBox="1 1 100 100" width='40px' height='40px'>
+          {/* <!-- Black square background --> */}
+          <rect width="100" height="100" rx="70" ry="70" fill="#C99E71" />
+
+          {/* <!-- White upward arrow --> */}
+          <path d="M25 60 L50 30 L75 60" stroke="#14110E" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+        </svg>
+        {/* <span>Back Home</span> */}
+      </div>
+    </div>
+  );
+};
 
 
 const Section = () => {
 
-  // useEffect(() => {
-  //   const map = L.map("map").setView([51.505, -0.09], 13);
-
-  //   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  //     attribution: '&copy; OpenStreetMap contributors'
-  //   }).addTo(map);
-
-  //   L.marker([51.505, -0.09]).addTo(map)
-  //     .bindPopup("Ваше место бронирования.")
-  //     .openPopup();
-
-  //   return () => {
-  //     map.remove();
-  //   };
-  // }, []);
-
   return (
-    <section className="w-full h-[4260px]">
+    <section className="w-full h-[5200px]">
 
       {/* section 1 */}
       <section
@@ -46,7 +69,7 @@ const Section = () => {
         style={{ backgroundImage: `url(${coffeeImg})` }}
       >
         {/* title */}
-        <div>
+        <div id="home">
           <ul className="py-[200px] px-[140px] space-y-10">
             <h1 className="text-white righteous-regular text-[72px] tracking-wide font-bold leading-20 transition duration-700 ease-in-out transform hover:scale-105 hover:shadow-lg">
               Enjoy Your <br /> Morning Coffee.
@@ -64,8 +87,8 @@ const Section = () => {
       </section>
 
 
-      {/* section 2 */}
-      <section className="w-full h-[1200px] flex justify-center">
+      {/* section 2  --  cart */}
+      <section id="cart" className="w-full h-[1200px] flex justify-center">
         <div className="w-[1240px] h-[1200px]">
           {/* card body 1 */}
           <div className="flex justify-evenly mt-14">
@@ -120,7 +143,7 @@ const Section = () => {
 
 
       {/* section-3 || popular product */}
-      <section className="w-full h-[710px] flex flex-col items-center mt-30">
+      <section id="popular_prodact" className="w-full h-[710px] flex flex-col items-center mt-30">
         {/* small-cart-section */}
         <div className=" w-[1240px] h-[700px] ">
           <h1 className="text-[#C99E71] text-[18px] text-center pt-12">Popular Product</h1>
@@ -128,7 +151,7 @@ const Section = () => {
           {/* cart */}
           <div className="flex justify-around mt-14 uppercase righteous-regular">
             {/* cart 1 -- brazil coffee gred */}
-            <div className="flex flex-col space-y-5 items-center justify-center w-[340px] bg-gray-600 h-[500px] text-center">
+            <div className="flex flex-col space-y-5 items-center justify-center w-[340px] h-[500px] text-center">
               <img src={BagPacking} alt="" />
               <p className="text-[25px]">brazil coffee gred</p>
               <button className=" w-[150px] h-[50px] bg-[#C99E71]">
@@ -145,7 +168,7 @@ const Section = () => {
             </div>
 
             {/* cart 2 -- brazil coffee gred */}
-            <div className="flex flex-col space-y-3 items-center justify-center w-[340px] bg-gray-600 h-[500px] text-center">
+            <div className="flex flex-col space-y-3 items-center justify-center w-[340px] h-[500px] text-center">
               <img src={BagPacking} alt="" />
               <h1 className="flex items-center text-[#C99E71]">Coffee
                 <span className="flex ml-2">
@@ -160,7 +183,7 @@ const Section = () => {
             </div>
 
             {/* cart 3 -- brazil coffee gred */}
-            <div className="flex flex-col space-y-3 items-center justify-center w-[340px] bg-gray-600 h-[500px] text-center">
+            <div className="flex flex-col space-y-3 items-center justify-center w-[340px] h-[500px] text-center">
               <img src={BagPacking} alt="" />
               <h1 className="flex items-center text-[#C99E71]">Coffee
                 <span className="flex ml-2">
@@ -177,12 +200,100 @@ const Section = () => {
         </div>
       </section>
       <div className="flex justify-center">
-        <button className="w-[200px] h-[50px] bg-[#C99E71] capitalize mt-6 righteous-regular">View all product</button>
+        <button className="w-[200px] h-[50px] bg-[#C99E71] capitalize mt-6 righteous-regular transform transition-all duration-300 hover:scale-105">
+          <Link to="/view_Product">View all product</Link>
+        </button>
       </div>
+      {/* Menu */}
+      <section id="menu" className="w-full h-[840px] mt-6 flex justify-center">
+        <div className="w-[1240px] h-[800px] pt-16">
+          {/* title */}
+          <h1 className="text-center text-[#C99E71] text-[18px]">Menu</h1>
+          <p className="text-center text-[48px] righteous-regular">Coffee popular menu</p>
+          <div className=" flex justify-evenly w-full h-[600px] mt-5 pt-7">
+            {/* 1 */}
+            <div className="space-y-8">
+              {/* americano */}
 
-      
+              <div className="flex items-center justify-around w-[460px] h-[110px] border-1 border-[#32323D]">
+                <div className="flex items-center gap-4 w-[360px] h-22">
+                  <img className="w-[72px] h-[72px]" width="72px" height="72px" src={americano} alt="" />
+                  <h1 className="text-[24px] righteous-regular">Americano rosted gred</h1>
+                </div>
+                <p className="text-[#C99E71] text-[18px] font-bold">$12:00</p>
+              </div>
+              {/* Espresso */}
+
+              <div className="flex items-center justify-around w-[460px] h-[110px] border-1 border-[#32323D]">
+                <div className="flex items-center gap-4 w-[360px] h-22">
+                  <img className="w-[72px] h-[72px]" width="72px" height="72px" src={espresso} alt="" />
+                  <h1 className="text-[24px] righteous-regular ">Espresso rosted gred</h1>
+                </div>
+                <p className="text-[#C99E71] text-[18px] font-bold">$14:00</p>
+              </div>
+
+              {/* Late */}
+              <div className="flex items-center justify-around w-[460px] h-[110px] border-1 border-[#32323D]">
+                <div className="flex items-center gap-4 w-[360px] h-22">
+                  <img className="w-[72px] h-[72px]" width="72px" height="72px" src={bestCoffe} alt="" />
+                  <h1 className="text-[24px] righteous-regular">Late rosted gred</h1>
+                </div>
+                <p className="text-[#C99E71] text-[18px] font-bold">$10:00</p>
+              </div>
+
+              {/* Cappuccino  */}
+              <div className="flex items-center justify-around w-[460px] h-[110px] border-1 border-[#32323D]">
+                <div className="flex items-center gap-4 w-[360px] h-22">
+                  <img className="w-[72px] h-[72px]" width="72px" height="72px" src={bestCoffe} alt="" />
+                  <h1 className="text-[24px] righteous-regular">Cappuccino rosted gred</h1>
+                </div>
+                <p className="text-[#C99E71] text-[18px] font-bold">$12:00</p>
+              </div>
+            </div>
+            {/* 2 */}
+            <div className="space-y-8">
+              {/* Cold Brew */}
+
+              <div className="flex items-center justify-around w-[460px] h-[110px] border-1 border-[#32323D]">
+                <div className="flex items-center gap-4 w-[360px] h-22">
+                  <img className="w-[72px] h-[72px]" width="72px" height="72px" src={cappuccino} alt="" />
+                  <h1 className="text-[24px] righteous-regular">Cold Brew rosted gred</h1>
+                </div>
+                <p className="text-[#C99E71] text-[18px] font-bold">$16:00</p>
+              </div>
+              {/* Macchiato */}
+
+              <div className="flex items-center justify-around w-[460px] h-[110px] border-1 border-[#32323D]">
+                <div className="flex items-center gap-4 w-[360px] h-22">
+                  <img className="w-[72px] h-[72px]" width="72px" height="72px" src={macchiato} alt="" />
+                  <h1 className="text-[24px] righteous-regular">Macchiato rosted gred</h1>
+                </div>
+                <p className="text-[#C99E71] text-[18px] font-bold">$18:00</p>
+              </div>
+
+              {/* Flat_White */}
+              <div className="flex items-center justify-around w-[460px] h-[110px] border-1 border-[#32323D]">
+                <div className="flex items-center gap-4 w-[360px] h-22">
+                  <img className="w-[72px] h-[72px]" width="72px" height="72px" src={Flat_White} alt="" />
+                  <h1 className="text-[24px] righteous-regular">Flat White rosted gred</h1>
+                </div>
+                <p className="text-[#C99E71] text-[18px] font-bold">$21:00</p>
+              </div>
+
+              {/* Cortado   */}
+              <div className="flex items-center justify-around w-[460px] h-[110px] border-1 border-[#32323D]">
+                <div className="flex items-center gap-4 w-[360px] h-22">
+                  <img className="w-[72px] h-[72px]" width="72px" height="72px" src={bestCoffe} alt="" />
+                  <h1 className="text-[24px] righteous-regular">Cortado  rosted gred</h1>
+                </div>
+                <p className="text-[#C99E71] text-[18px] font-bold">$13:00</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       {/* Testimonial */}
-      <section className="w-full h-[640px] pt-6 flex justify-center">
+      <section id="testimonial" className="w-full h-[640px] pt-6 flex justify-center">
         <div className="w-[1240px] h-[610px] pt-16">
           {/* Отзыв */}
           <h1 className="text-center text-[#C99E71] text-[18px]">Testimonial</h1>
@@ -257,7 +368,7 @@ const Section = () => {
                   <path d="M35 25H15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                   <path d="M22 32L15 25L22 18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
-
+                {/* cursor right */}
                 <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
                   {/* <!-- Правая кнопка --> */}
                   <circle cx="25" cy="25" r="20" fill="#C49A6C" />
@@ -270,12 +381,12 @@ const Section = () => {
         </div>
       </section>
       {/* Reservation ---  Бронирование */}
-      <section className="w-full h-[640px] mt-2 pt-5 flex justify-center">
+      <section id="reservation" className="w-full h-[640px] mt-2 pt-5 flex justify-center">
         <div className=" w-[1040px] flex bg-gray-800 h-[600px]">
           <img className="" src={map} width='537' alt="" />
           {/* title */}
           <div className="w-[537px] h-[600px] bg-[#1C1814]">
-            <ul className="text-center pt-18">
+            <ul className="text-center pt-27">
               <h1 className="text-[18px] text-[#C99E71] ">
                 Reservation
               </h1>
@@ -283,24 +394,18 @@ const Section = () => {
                 Booking a table
               </p>
             </ul>
-            <div action="" className="flex flex-col items-center pt-6 space-y-6 ">
-              {/* people number */}
-              <input
-                className="w-[260px] h-[44px] text-[16px] px-4 py-2 border rounded-lg bg-[#1E1B18] border-[#C99E71] text-[#EADBC8] placeholder-[#A68A64] focus:outline-none focus:ring-2 focus:ring-[#C99E71] transition-all duration-300"
-                type="text"
-                placeholder="Number of People"
-              />
+            <div action="" className="flex flex-col items-center pt-6 space-y-9 ">
               {/* data */}
               <input
                 className="w-[260px] h-[44px] text-[16px] px-4 py-2 border rounded-lg bg-[#1E1B18] border-[#C99E71] text-[#EADBC8] placeholder-[#A68A64] focus:outline-none focus:ring-2 focus:ring-[#C99E71] transition-all duration-300"
-                type="date"
-                placeholder="data"
+                type="text"
+                placeholder="Enter Date"
               />
               {/* time */}
               <input
                 className="w-[260px] h-[44px] text-[16px] px-4 py-2 border rounded-lg bg-[#1E1B18] border-[#C99E71] text-[#EADBC8] placeholder-[#A68A64] focus:outline-none focus:ring-2 focus:ring-[#C99E71] transition-all duration-300"
-                type="time"
-                placeholder="Number of People"
+                type="text"
+                placeholder="Enter number of People"
               />
               {/* phone_number */}
               <input
@@ -310,13 +415,15 @@ const Section = () => {
               />
             </div>
             <button className="bg-[#C99E71] w-[160px] h-[45px] ml-42.5 mt-10">
-              <p className="text-[23px] righteous-regular">Order</p>
+              <p className="text-[23px] righteous-regular"><Link to={'/order'}>Order</Link></p>
             </button>
           </div>
-          {/* leaflet */}
-          {/* <div id="map" style={{ width: "600px" , height: "600px" }}></div> */}
         </div>
       </section>
+
+      {/* navigate home page */}
+
+      <HomeNavigationButton />
     </section>
   );
 };
