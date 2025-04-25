@@ -18,7 +18,7 @@ const TestCoffee = () => {
     setIsLoading(true);
     fetch('http://localhost:3000/coffee', {
       method: 'GET',
-      cache: 'no-store', // Prevent 304 Not Modified by disabling cache
+      cache: 'no-store',
     })
       .then((res) => {
         if (!res.ok) {
@@ -27,8 +27,6 @@ const TestCoffee = () => {
         return res.json();
       })
       .then((data) => {
-        console.log("Fetched coffee data:", data);
-
         let coffeeArray = [];
         if (Array.isArray(data)) {
           coffeeArray = data;
@@ -50,6 +48,7 @@ const TestCoffee = () => {
         setIsLoading(false);
       });
   }, []);
+
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
@@ -85,8 +84,8 @@ const TestCoffee = () => {
 
     return true;
   };
+
   const handleImageChange = (e) => {
-    // Only set the first file
     if (e.target.files && e.target.files[0]) {
       setImages(e.target.files[0]);
     }
@@ -102,36 +101,23 @@ const TestCoffee = () => {
     formData.append("name", name.trim());
     formData.append("price", parseFloat(price));
     formData.append("coffeeShopId", coffeeShopId);
-
-    // Append the single image file
     formData.append("image", image);
-
-    // Log what we're sending for debugging
-    console.log("Sending data to server:");
-    console.log("Name:", name);
-    console.log("Price:", price);
-    console.log("CoffeeShopId:", coffeeShopId);
-    console.log("Image file:", image);
 
     setIsLoading(true);
     try {
       const res = await fetch("http://localhost:3000/coffee", {
         method: "POST",
-        // Important: Do NOT set Content-Type header when sending FormData
         body: formData,
       });
 
-      // Check if we got HTML instead of JSON (error page)
       const contentType = res.headers.get("content-type");
       if (contentType && contentType.includes("text/html")) {
-        console.error("Server returned HTML instead of JSON");
         throw new Error("Server returned an error page instead of JSON");
       }
 
       const data = await res.json();
 
       if (res.ok) {
-        // Add the new coffee to the list
         const newCoffee = data.data || data;
         setCoffee((prev) => [...prev, newCoffee]);
         closeModal();
@@ -146,6 +132,30 @@ const TestCoffee = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    const confirmed = window.confirm("Are you sure you want to delete this coffee?");
+    if (!confirmed) return;
+
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`http://localhost:3000/coffee/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || "Failed to delete coffee");
+      }
+
+      setCoffee((prev) => prev.filter((item) => item._id !== id));
+    } catch (err) {
+      console.error("Error deleting coffee:", err);
+      setError("An error occurred while deleting coffee. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#1C1814] p-6 text-white">
@@ -169,11 +179,28 @@ const TestCoffee = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {Array.isArray(coffee) && coffee.map((coffeeItem) => (
           <div key={coffeeItem._id} className="bg-[#2b251e] shadow-md rounded-2xl p-4">
-            <h2 className="text-xl font-semibold text-[#C99E71]">{coffeeItem.name}</h2>
-            <p className="text-gray-300">Price: ${parseFloat(coffeeItem.price).toFixed(2)}</p>
-            {coffeeItem.image && coffeeItem.image && (
+            <div className="flex justify-between items-start">
+              <div>
+                <h2 className="text-xl font-semibold text-[#C99E71]">{coffeeItem.name}</h2>
+                <p className="text-gray-300">Price: ${parseFloat(coffeeItem.price).toFixed(2)}</p>
+              </div>
+              <button
+                onClick={() => handleDelete(coffeeItem._id)}
+                className="text-red-400 hover:text-red-600"
+                title="Delete Coffee"
+              >
+                🗑
+              </button>
+            </div>
+
+
+            {coffeeItem.image && (
               <img
-                src={typeof coffeeItem.image === 'string' ? coffeeItem.image : URL.createObjectURL(coffeeItem.image)}
+                src={
+                  typeof coffeeItem.image === 'string'
+                    ? `http://localhost:3000/${coffeeItem.image}`
+                    : URL.createObjectURL(coffeeItem.image)
+                }
                 alt={coffeeItem.name}
                 className="mt-2 w-full h-40 object-cover rounded"
                 onError={(e) => {
@@ -182,13 +209,14 @@ const TestCoffee = () => {
                 }}
               />
             )}
+
           </div>
         ))}
       </div>
 
       <button
         onClick={openModal}
-        className="w-[150px] h-[50px] bg-[#C99E71] text-white text-[16px] absolute bottom-10 left-1/2 transform -translate-x-1/2 rounded-lg shadow-md hover:bg-[#b4895d] transition"
+        className="w-[150px] h-[50px] ml-173 bg-[#C99E71] text-white text-[16px] rounded-lg shadow-md hover:bg-[#b4895d] transition"
         disabled={isLoading}
       >
         Add Coffee
@@ -245,11 +273,6 @@ const TestCoffee = () => {
                   className="w-full p-2 border border-[#C99E71] rounded bg-[#1C1814] text-white"
                   required
                 />
-                {image.length > 0 && (
-                  <div className="mt-2 text-sm text-gray-300">
-                    {image.length} file(s) selected
-                  </div>
-                )}
               </div>
 
               <div>

@@ -4,7 +4,7 @@ token = token !== "undefined0" ? token : "false";
 
 
 const api = axios.create({
-   baseURL: "http://localhost:3000/api",
+   baseURL: "http://localhost:3000",
    headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${JSON.parse(token)}`,

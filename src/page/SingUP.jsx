@@ -7,6 +7,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [errorMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -17,21 +18,20 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("Form Data:", formData);
       const res = await api.post("/users/login", formData);
       localStorage.setItem("avto-user", JSON.stringify(res.data?.data));
       localStorage.setItem("avto-token", JSON.stringify(res.data?.token));
       setAuthToken(res.data?.token);
       navigate("/");
+      console.log("Form Data:", formData);
     } catch (error) {
-      console.error("Login error:", error);
+      console.error(error);
     }
-  };
-
+  }
   return (
     <>
       {/* Back button */}
-      <span className="absolute top-5 right-5">
+      <span className="absolute top-5 right-5 cursor-pointer">
         <svg onClick={() => navigate('/')} width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="25" cy="25" r="20" fill="#C99E71" />
           <path d="M35 25H15" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -45,6 +45,11 @@ const Login = () => {
           className="bg-[#1e1b19] rounded-2xl shadow-lg p-8 w-full max-w-md space-y-4"
         >
           <h1 className="text-[24px] text-center righteous-regular text-[#C99E71]">Login</h1>
+
+          {/* Error message */}
+          {errorMessage && (
+            <div className="text-red-500 text-sm text-center">{errorMessage}</div>
+          )}
 
           {/* Email */}
           <div>

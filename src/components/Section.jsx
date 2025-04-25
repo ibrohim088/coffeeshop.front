@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 // import { useEffect } from "react";
-// img
 import coffeeImg from "../assets/coffe1.png"; // Импортируем картинку
 import bestCoffe from "../assets/best_coffee.png";
 import plase_coffee from "../assets/place_to_get.png";

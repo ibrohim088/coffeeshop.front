@@ -11,8 +11,8 @@ const Register = () => {
    const onSubmit = async (data) => {
       try {
          const res = await api.post("/users/register", data);
-         localStorage.setItem("avto-user", JSON.stringify(res.data?.data));
-         localStorage.setItem("avto-token", JSON.stringify(res.data?.token));
+         localStorage.setItem("coffee_shop-user", JSON.stringify(res.data?.data));
+         localStorage.setItem("coffee_shop-token", JSON.stringify(res.data?.token));
          setAuthToken(res.data?.token);
          setMessage("Registration successful!");
          reset();
@@ -39,7 +39,7 @@ const Register = () => {
             >
                <h1 className="text-2xl font-bold text-center text-[#C99E71]">Register</h1>
 
-               {message && <div className="text-green-600 text-center">{message}</div>}
+               {message && <div className="text-red-600 text-center">{message}</div>}
 
                <div>
                   <label htmlFor="name" className="block text-[#C99E71] mb-1 font-medium">Name</label>
