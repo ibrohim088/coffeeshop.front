@@ -197,13 +197,18 @@ const TestCoffee = () => {
 
             {coffeeItem.image && (
               <img
+                // src={
+                //   typeof coffeeItem.image === 'string'
+                //     ? `http://localhost:3000/uploads${coffeeItem.image}`
+                //     : URL.createObjectURL(coffeeItem.image)
+                // }
                 src={
                   typeof coffeeItem.image === 'string'
-                    ? `http://localhost:3000/uploads${coffeeItem.image}`
+                    ? `http://localhost:3000/${coffeeItem.image}`
                     : URL.createObjectURL(coffeeItem.image)
                 }
                 alt={coffeeItem.name}
-                className="mt-2 w-full h-40 object-cover rounded"
+                className="mt-2 w-full h-100 object-cover rounded"
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = 'https://placehold.co/600x400?text=No+Image';

@@ -5,14 +5,14 @@ import { useNavigate } from 'react-router-dom';
 const Order = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const userId = ''; // Replace with actual userId from auth or props
+  const userId = ''; // Replace with actual user ID
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/order/orders', {
-          params: { userId }, // use params for GET request
+        const res = await axios.get('http://localhost:3000/order/order', {
+          params: { user: userId }, // corrected: backend expects `user`, not `userId`
         });
         setOrders(res.data.data);
       } catch (err) {
@@ -24,6 +24,18 @@ const Order = () => {
 
     fetchOrders();
   }, []);
+
+  const deleteOrder = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this order?")) return;
+
+    try {
+      await axios.delete(`http://localhost:3000/order/order/${id}`);
+      setOrders((prev) => prev.filter((order) => order._id !== id));
+    } catch (error) {
+      console.error("Failed to delete order:", error);
+      alert("Failed to delete order");
+    }
+  };
 
   if (loading) {
     return <div className="text-center py-10 text-lg font-semibold">Loading orders...</div>;
@@ -52,7 +64,7 @@ const Order = () => {
               className="bg-[#22201e] flex flex-col justify-between p-6 rounded-2xl shadow-lg w-72 hover:shadow-2xl transition-all duration-300"
             >
               <div>
-                <h2 className="text-xl font-bold mb-2">{order.coffee?.name || 'Unknown Coffee'}</h2>
+                <h2 className="text-xl font-bold mb-2">{order?.coffee?.name || 'Unknown Coffee'}</h2>
                 <p className="text-[#C99E71] text-lg font-semibold mb-1">Price: ${order.coffee?.price}</p>
                 <p className="text-sm text-gray-400">Shop: {order.coffeeShop?.name || 'Unknown Shop'}</p>
               </div>
@@ -70,6 +82,14 @@ const Order = () => {
                 <p className="text-xs text-gray-400 mt-2">
                   {new Date(order.date).toLocaleDateString()}
                 </p>
+                <div className="mt-4">
+                  <button
+                    onClick={() => deleteOrder(order._id)}
+                    className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 text-sm"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
           ))}
