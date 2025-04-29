@@ -12,7 +12,7 @@ const Order = () => {
     const fetchOrders = async () => {
       try {
         const res = await axios.get('http://localhost:3000/order/orders', {
-          data: { userId },
+          params: { userId }, // use params for GET request
         });
         setOrders(res.data.data);
       } catch (err) {
@@ -30,43 +30,44 @@ const Order = () => {
   }
 
   return (
-    <div className="">
-      <span className='absolute top-5 right-5'>
+    <div className="min-h-screen bg-[#1C1814] p-6 text-white relative">
+      {/* Back Button */}
+      <span className="absolute top-5 right-5 cursor-pointer">
         <svg onClick={() => navigate('/')} width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="25" cy="25" r="20" fill="#C99E71" />
           <path d="M35 25H15" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           <path d="M22 32L15 25L22 18" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </span>
-      <h1 className="text-3xl font-bold mt-10 text-center">Your Orders</h1>
+
+      <h1 className="text-3xl font-bold text-center mb-10 mt-8">Your Orders</h1>
 
       {orders.length === 0 ? (
-        <p className="text-center text-gray-500">No orders found.</p>
+        <p className="text-center text-gray-400">No orders found.</p>
       ) : (
-        <div className="space-y-4 w-[300px]">
+        <div className="flex flex-wrap justify-center gap-8">
           {orders.map((order) => (
             <div
               key={order._id}
-              className="border border-gray-200 rounded-2xl shadow-md p-4 flex justify-between items-center"
+              className="bg-[#22201e] flex flex-col justify-between p-6 rounded-2xl shadow-lg w-72 hover:shadow-2xl transition-all duration-300"
             >
               <div>
-                <h2 className="text-xl font-semibold">{order.coffee?.name}</h2>
-                <p className="text-[#C99E71]">Price: ${order.coffee?.price}</p>
-                <p className="text-sm ">Shop: {order.coffeeShop?.name}</p>
+                <h2 className="text-xl font-bold mb-2">{order.coffee?.name || 'Unknown Coffee'}</h2>
+                <p className="text-[#C99E71] text-lg font-semibold mb-1">Price: ${order.coffee?.price}</p>
+                <p className="text-sm text-gray-400">Shop: {order.coffeeShop?.name || 'Unknown Shop'}</p>
               </div>
 
-              <div className="text-right">
+              <div className="mt-6 flex flex-col items-center">
                 <span
-                  className={`inline-block w-[70px] text-center rounded-full  ${order.status === 'Delivered'
-                      ? 'bg-[#C99E71] '
-                      : order.status === 'Processing'
-                        ? 'bg-[#C99E71]'
-                        : 'bg-[#C99E71]'
-                    }`}
+                  className={`px-4 py-1 rounded-full text-sm font-semibold ${
+                    order.status === 'Delivered'
+                      ? 'bg-[#C99E71] text-black'
+                      : 'bg-[#C99E71] text-black'
+                  }`}
                 >
                   {order.status}
                 </span>
-                <p className="text-xs pr-1.5 pt-3">
+                <p className="text-xs text-gray-400 mt-2">
                   {new Date(order.date).toLocaleDateString()}
                 </p>
               </div>

@@ -9,7 +9,7 @@ const TestCoffee = () => {
 
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
-  const [image, setImages] = useState([]);
+  const [images, setImages] = useState([]); // исправил на массив файлов
   const [coffeeShopId, setCoffeeShopId] = useState('');
   const navigate = useNavigate();
 
@@ -37,7 +37,6 @@ const TestCoffee = () => {
         } else {
           throw new Error("Invalid coffee data format");
         }
-
         setCoffee(coffeeArray);
       })
       .catch((err) => {
@@ -48,7 +47,6 @@ const TestCoffee = () => {
         setIsLoading(false);
       });
   }, []);
-
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
@@ -72,7 +70,7 @@ const TestCoffee = () => {
       return false;
     }
 
-    if (image.length === 0) {
+    if (images.length === 0) {
       setError('At least one image file is required');
       return false;
     }
@@ -86,8 +84,9 @@ const TestCoffee = () => {
   };
 
   const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setImages(e.target.files[0]);
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files);
+      setImages(filesArray);
     }
   };
 
@@ -101,7 +100,10 @@ const TestCoffee = () => {
     formData.append("name", name.trim());
     formData.append("price", parseFloat(price));
     formData.append("coffeeShopId", coffeeShopId);
-    formData.append("image", image);
+
+    images.forEach((img) => {
+      formData.append("image", img);
+    });
 
     setIsLoading(true);
     try {
@@ -111,7 +113,7 @@ const TestCoffee = () => {
       });
 
       const contentType = res.headers.get("content-type");
-      if (contentType && contentType.includes("text/html")) {
+      if (contentType && contentType.includes("multipart/form-data")) {
         throw new Error("Server returned an error page instead of JSON");
       }
 
@@ -193,12 +195,11 @@ const TestCoffee = () => {
               </button>
             </div>
 
-
             {coffeeItem.image && (
               <img
                 src={
                   typeof coffeeItem.image === 'string'
-                    ? `http://localhost:3000/${coffeeItem.image}`
+                    ? `http://localhost:3000/uploads${coffeeItem.image}`
                     : URL.createObjectURL(coffeeItem.image)
                 }
                 alt={coffeeItem.name}
@@ -209,14 +210,13 @@ const TestCoffee = () => {
                 }}
               />
             )}
-
           </div>
         ))}
       </div>
 
       <button
         onClick={openModal}
-        className="w-[150px] h-[50px] ml-173 bg-[#C99E71] text-white text-[16px] rounded-lg shadow-md hover:bg-[#b4895d] transition"
+        className="w-[150px] h-[50px] ml-173 bg-[#C99E71] text-white text-[16px] rounded-lg shadow-md hover:bg-[#b4895d] transition mt-8"
         disabled={isLoading}
       >
         Add Coffee
